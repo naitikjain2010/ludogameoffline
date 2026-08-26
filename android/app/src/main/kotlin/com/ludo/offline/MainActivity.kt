@@ -1,4 +1,4 @@
-package dev.nizwar.ludo_flutter
+package com.ludo.offline
 
 import io.flutter.embedding.android.FlutterActivity
 

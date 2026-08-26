@@ -70,7 +70,6 @@ class _PlayerSetupScreenState extends State<PlayerSetupScreen> {
     cheatColor = null;
   }
 
-  // FIXED: method ka naam _btn hi rakha hai
   Widget _btn(int count) {
     bool isSelected = selectedPlayers == count;
     return GestureDetector(
@@ -143,11 +142,14 @@ class _PlayerSetupScreenState extends State<PlayerSetupScreen> {
                         children: [
                           GestureDetector(
                             onLongPress: () {
-                              HapticFeedback.mediumImpact();
-                              cheatColor = colorName;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('$colorName is winner!')),
-                              );
+                              // FIXED: SnackBar hata diya, sirf halka vibrate
+                              HapticFeedback.lightImpact();
+                              Future.delayed(Duration(milliseconds: 100), () {
+                                HapticFeedback.mediumImpact();
+                              });
+                              setState(() {
+                                cheatColor = colorName;
+                              });
                             },
                             child: Container(
                               width: 50,
