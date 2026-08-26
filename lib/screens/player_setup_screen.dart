@@ -47,12 +47,8 @@ class _PlayerSetupScreenState extends State<PlayerSetupScreen> {
   Future<void> _ensurePlay() async {
     if (_bgPlayer.playing) return;
     try {
-      if (!_started) {
-        await _bgPlayer.play();
-        _started = true;
-      } else {
-        await _bgPlayer.play();
-      }
+      await _bgPlayer.play();
+      _started = true;
     } catch (e) {}
   }
 
@@ -74,6 +70,40 @@ class _PlayerSetupScreenState extends State<PlayerSetupScreen> {
     cheatColor = null;
   }
 
+  // FIXED: method ka naam _btn hi rakha hai
+  Widget _btn(int count) {
+    bool isSelected = selectedPlayers == count;
+    return GestureDetector(
+      onTap: () {
+        _ensurePlay();
+        setState(() {
+          selectedPlayers = count;
+          updateColors();
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.all(10),
+        width: 70,
+        height: 70,
+        decoration: BoxDecoration(
+          color: isSelected? Colors.amber : Colors.white24,
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white, width: 2),
+        ),
+        child: Center(
+          child: Text(
+            "${count}P",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: isSelected? Colors.black : Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -84,7 +114,11 @@ class _PlayerSetupScreenState extends State<PlayerSetupScreen> {
           child: Column(
             children: [
               const SizedBox(height: 40),
-              const Text("SELECT PLAYERS", style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
+              const Text("SELECT PLAYERS",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold)),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -111,21 +145,69 @@ class _PlayerSetupScreenState extends State<PlayerSetupScreen> {
                             onLongPress: () {
                               HapticFeedback.mediumImpact();
                               cheatColor = colorName;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('$colorName is winner!')),
+                              );
                             },
                             child: Container(
-                              width: 50, height: 50,
+                              width: 50,
+                              height: 50,
                               decoration: BoxDecoration(
                                 color: colorMap[colorName],
                                 shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white, width: 2),
+                                border:
+                                Border.all(color: Colors.white, width: 2),
                               ),
                             ),
                           ),
                           const SizedBox(width: 15),
-                          Text("Player ${index + 1} - ${colorName.toUpperCase()}", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          Text(
+                              "Player ${index + 1} - ${colorName.toUpperCase()}",
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
                         ],
                       ),
                     );
                   },
                 ),
-             
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 60,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.amber,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30))),
+                    onPressed: () async {
+                      await _bgPlayer.stop();
+                      if (!mounted) return;
+                      final provider =
+                      Provider.of<LudoProvider>(context, listen: false);
+                      provider.startGame(totalPlayers: selectedPlayers);
+                      if (cheatColor!= null) {
+                        provider.setCheatWinner(cheatColor!);
+                      }
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const MainScreen()));
+                    },
+                    child: Text("PLAY WITH $selectedPlayers PLAYERS",
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
