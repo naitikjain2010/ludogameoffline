@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 
 import 'ludo_provider.dart';
 import 'main_screen.dart';
-import 'screens/player_setup_screen.dart'; // <-- Ye import add kiya
+import 'screens/player_setup_screen.dart';
 
 main() {
   WidgetsFlutterBinding.ensureInitialized();
   return runApp(ChangeNotifierProvider(
-    create: (_) => LudoProvider(), // yahan se ..startGame() hata diya
+    create: (_) => LudoProvider(),
     child: const Root(),
   ));
 }
@@ -45,9 +45,9 @@ class _RootState extends State<Root> {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: PlayerSetupScreen(), // <-- YAHAN CHANGE KIYA
+      home: PlayerSetupScreen(),
     );
   }
 }

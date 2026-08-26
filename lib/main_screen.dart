@@ -43,7 +43,6 @@ class _MainScreenState extends State<MainScreen> {
                       Text("The Winners is: ${value.winners.map((e) => e.name.toUpperCase()).join(", ")}", style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                       const SizedBox(height: 30),
 
-                      // START NEW GAME -> Player Setup pe bhejega
                       SizedBox(
                         width: double.infinity,
                         height: 50,
@@ -52,7 +51,7 @@ class _MainScreenState extends State<MainScreen> {
                           onPressed: () {
                             Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(builder: (_) => const PlayerSetupScreen()),
+                              MaterialPageRoute(builder: (_) => PlayerSetupScreen()),
                                   (route) => false,
                             );
                           },
@@ -70,7 +69,7 @@ class _MainScreenState extends State<MainScreen> {
                                 onPressed: () {
                                   Navigator.pushAndRemoveUntil(
                                     context,
-                                    MaterialPageRoute(builder: (_) => const PlayerSetupScreen()),
+                                    MaterialPageRoute(builder: (_) => PlayerSetupScreen()),
                                         (route) => false,
                                   );
                                 },
